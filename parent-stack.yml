@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Base stack for creating toy checklist aws serverless application
+Parameters:
+  CfnResourcesS3Bucket:
+    Description: S3 Bucket containing the nested cloudformation templates
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: (?!^(\d{1,3}\.){3}\d{1,3}$)(^[a-z0-9]([a-z0-9-]*(\.[a-z0-9])?)*$(?<!\-))
+    ConstraintDescription: The bucket name cannot contain underscores, end with a dash, have consecutive periods, or use dashes adjacent to period.
+    Default: cloudformationresourcesdcorp
+  RootDomainName:
+    Description: Root DNS name to be used for the toy checklist aws serverless application
+    Type: String
+    MinLength: 1
+    MaxLength: 64
+    AllowedPattern: (?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)
+    ConstraintDescription: Must be a valid fully-qualified domain name.
+    Default: dcorp.info
+  BillingCode:
+    Description: Billing code to be tagged on the resources of the toy checklist aws serverless application
+    Type: String
+    MinLength: 1
+    MaxLength: 64
+    Default: toychecklist
+Resources:
+  S3Stack:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Retain
+    Properties:
+      Parameters:
+        RootDomainName: !Ref RootDomainName
+        ParentStackName: !Ref AWS::StackName
+        BillingCode: !Ref BillingCode
+      TemplateURL: !Sub
+          - https://${CloudformationResources}.s3-eu-west-1.amazonaws.com/toychecklist/cfn-templates/s3-static-hosting-stack.yml
+          - CloudformationResources: !Ref CfnResourcesS3Bucket
+      TimeoutInMinutes: 5
+  Route53Stack:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Retain
+    Properties:
+      Parameters:
+        RootDomainName: !Ref RootDomainName
+        WWWDomainName: !GetAtt 'S3Stack.Outputs.WWWDomainName'
+        ParentStackName: !Ref AWS::StackName
+        BillingCode: !Ref BillingCode
+      TemplateURL: !Sub
+          - https://${CloudformationResources}.s3-eu-west-1.amazonaws.com/toychecklist/cfn-templates/route53-stack.yml
+          - CloudformationResources: !Ref CfnResourcesS3Bucket
+      TimeoutInMinutes: 5
+  DynamoDbStack:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Retain
+    Properties:
+      Parameters:
+        ParentStackName: !Ref AWS::StackName
+        BillingCode: !Ref BillingCode
+      TemplateURL: !Sub
+          - https://${CloudformationResources}.s3-eu-west-1.amazonaws.com/toychecklist/cfn-templates/dynamodb-stack.yml
+          - CloudformationResources: !Ref CfnResourcesS3Bucket
+      TimeoutInMinutes: 5
+Outputs:
+  ApplicationUrl:
+    Value: !GetAtt 'S3Stack.Outputs.WWWWebsiteURL'
+    Description: WWW URL of the S3 bucket hosting the toy checklist aws serverless application

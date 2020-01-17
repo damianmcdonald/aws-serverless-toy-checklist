@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Star Wars Vintage Action Figures</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/thumbnail-gallery.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <h1 class="page-header">Star Wars Vintage Action Figures Gallery</h1>
+
+      <div>
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Movie</th>
+              <th>Completion %</th>
+              <th>Acquired Figures</th>
+              <th>Remaining Figures</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Star Wars</td>
+            <td>
+              <div class="progress">
+                <div id="completion-percent-star-wars" class="progress-bar" role="progressbar" aria-valuenow="70"
+                aria-valuemin="0" aria-valuemax="100" style="width:70%">
+                </div>
+              </div>
+            </td>
+            <td id="acquired-figures-star-wars"></td>
+            <td id="remaining-figures-star-wars"></td>
+            <td id="total-figures-star-wars"></td>
+          </tr>
+          <tr>
+            <td>The Empire Strikes Back</td>
+            <td>
+              <div class="progress">
+                <div id="completion-percent-empire" class="progress-bar" role="progressbar" aria-valuenow="70"
+                aria-valuemin="0" aria-valuemax="100" style="width:70%">
+                </div>
+              </div>
+            </td>
+            <td id="acquired-figures-empire"></td>
+            <td id="remaining-figures-empire"></td>
+            <td id="total-figures-empire"></td>
+          </tr>
+          <tr>
+            <td>Return Of The Jedi</td>
+            <td>
+              <div class="progress">
+                <div id="completion-percent-return" class="progress-bar" role="progressbar" aria-valuenow="70"
+                aria-valuemin="0" aria-valuemax="100" style="width:70%">
+                </div>
+              </div>
+            </td>
+            <td id="acquired-figures-return"></td>
+            <td id="remaining-figures-return"></td>
+            <td id="total-figures-return"></td>
+          </tr>
+          <tr>
+            <td style="font-weight:bold;">Total</td>
+            <td>
+              <div class="progress">
+                <div id="completion-percent-total" class="progress-bar" role="progressbar" aria-valuenow="70"
+                aria-valuemin="0" aria-valuemax="100" style="width:70%">
+                </div>
+              </div>
+            </td>
+            <td id="acquired-figures-total" style="font-weight:bold;"></td>
+            <td id="remaining-figures-total" style="font-weight:bold;"></td>
+            <td id="total-figures-total" style="font-weight:bold;"></td>
+          </tr>
+        </table>
+      </div>
+
+        <h2 class="page-header">Star Wars</h2>
+        <div class="row">
+          <div class="figure-gallery-star-wars">
+
+          </div>
+        </div>
+
+        <h2 class="page-header">The Empire Strikes Back</h2>
+        <div class="row">
+          <div class="figure-gallery-empire">
+
+          </div>
+        </div>
+
+          <h2 class="page-header">Return Of The Jedi</h2>
+          <div class="row">
+            <div class="figure-gallery-return">
+
+            </div>
+          </div>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/properties.js"></script>
+
+    <script src="js/init.js"></script>
+
+</body>
+
+</html>

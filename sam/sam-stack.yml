@@ -1,0 +1,181 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Nested stack for creating the serverless deployment (API Gateway and Lambda) of the toy checklist application
+Globals:
+  Function:
+    Runtime: nodejs12.x
+    Timeout: 15
+  Api:
+    OpenApiVersion: '3.0.1'
+Parameters:
+  ParentStackName:
+    Description: Parent stack name
+    Type: String
+    MinLength: 1
+    MaxLength: 64
+    Default: toychecklist
+  BillingCode:
+    Description: Billing code to be tagged on the resources of the toy checklist aws serverless application
+    Type: String
+    MinLength: 1
+    MaxLength: 64
+    Default: toychecklist
+  CfnResourcesS3Bucket:
+    Description: S3 Bucket containing the nested cloud formation templates
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    AllowedPattern: (?!^(\d{1,3}\.){3}\d{1,3}$)(^[a-z0-9]([a-z0-9-]*(\.[a-z0-9])?)*$(?<!\-))
+    ConstraintDescription: The bucket name cannot contain underscores, end with a dash, have consecutive periods, or use dashes adjacent to period.
+    Default: cloudformationresourcesdcorp
+  StageName:
+    Description: The Lambda Function Stage
+    Type: String
+    MinLength: 1
+    MaxLength: 64
+    Default: dev
+  StarWarsTable:
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    Description: The name of the DynamoDB Table for Star Wars action figures
+    Default: StarWars
+Resources:
+  RestApi:
+    Type: AWS::Serverless::Api
+    Name: toychecklistapi
+    Properties:
+      Name:
+        Fn::Sub: toychecklist-api-${StageName}
+      StageName:
+        Ref: StageName
+      DefinitionBody:
+          Fn::Transform:
+            Name: AWS::Include
+            Parameters:
+              Location: !Sub
+                - s3://${CloudformationResources}/toychecklist/cfn-templates/api-definition.yml
+                - CloudformationResources: !Ref CfnResourcesS3Bucket
+  ListStarWarsFiguresFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: toychecklist-api-${StageName}-list-actionfigures-starwars
+      CodeUri: src/
+      Handler: index_starwars.listFigures
+      Policies:
+        DynamoDBReadPolicy:
+          TableName:
+            Ref: StarWarsTable
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: StarWarsTable
+      Events:
+        Get:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: RestApi
+            Path: /starwars
+            Method: GET
+  CreateStarWarsFigureFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: toychecklist-api-${StageName}-create-actionfigure-starwars
+      CodeUri: src/
+      Handler: index_starwars.createFigure
+      Policies:
+        DynamoDBCrudPolicy:
+          TableName:
+            Ref: StarWarsTable
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: StarWarsTable
+      Events:
+        Post:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: RestApi
+            Path: /starwars
+            Method: POST
+  GetStarWarsFigureFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: toychecklist-api-${StageName}-get-actionfigure-starwars
+      CodeUri: src/
+      Handler: index_starwars.getFigure
+      Policies:
+        DynamoDBReadPolicy:
+          TableName:
+            Ref: StarWarsTable
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: StarWarsTable
+      Events:
+        Get:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: RestApi
+            Path: /starwars/{id}
+            Method: GET
+  UpdateStarWarsFigureFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: toychecklist-api-${StageName}-update-actionfigure-starwars
+      CodeUri: src/
+      Handler: index_starwars.updateFigure
+      Policies:
+        DynamoDBCrudPolicy:
+          TableName:
+            Ref: StarWarsTable
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: StarWarsTable
+      Events:
+        Get:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: RestApi
+            Path: /starwars/{id}
+            Method: PUT
+  DeleteStarWarsFigureFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: toychecklist-api-${StageName}-delete-actionfigure-starwars
+      CodeUri: src/
+      Handler: index_starwars.deleteFigure
+      Policies:
+        DynamoDBCrudPolicy:
+          TableName:
+            Ref: StarWarsTable
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: StarWarsTable
+      Events:
+        Get:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: RestApi
+            Path: /starwars/{id}
+            Method: DELETE
+Outputs:
+  ApiUrl:
+    Value:
+      Fn::Join:
+        - ""
+        - - "https://"
+          - Ref: RestApi
+          - Fn::Sub: ".execute-api.${AWS::Region}.amazonaws.com/${StageName}"

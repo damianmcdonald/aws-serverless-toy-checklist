@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Nested stack for creating toy checklist application S3 buckets for static website hosting
+Parameters:
+  RootDomainName:
+    Description: Root DNS name to be used for the toy checklist aws serverless application
+    Type: String
+    MinLength: 1
+    MaxLength: 64
+    AllowedPattern: (?!-)[a-zA-Z0-9-.]*(?<!-)
+    ConstraintDescription: Must be a valid fully-qualified domain name.
+    Default: dcorp.info
+  ParentStackName:
+    Description: Parent stack name
+    Type: String
+    MinLength: 1
+    MaxLength: 64
+    Default: toychecklist
+  BillingCode:
+    Description: Billing code to be tagged on the resources of the toy checklist aws serverless application
+    Type: String
+    MinLength: 1
+    MaxLength: 64
+    Default: toychecklist
+Resources:
+  RootBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Ref RootDomainName
+      AccessControl: PublicRead
+      VersioningConfiguration:
+        Status: Enabled
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+      Tags:
+        -
+          Key: "Name"
+          Value: "Toy Checklist Root"
+        -
+          Key: "Purpose"
+          Value: "Root bucket for Toy Checklist application"
+        -
+          Key: "BillingCode"
+          Value: !Ref BillingCode
+        -
+          Key: "Stackname"
+          Value: !Ref ParentStackName
+  WWWBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub
+          - www.${Domain}
+          - Domain: !Ref RootDomainName
+      AccessControl: BucketOwnerFullControl
+      WebsiteConfiguration:
+        RedirectAllRequestsTo:
+          HostName: !Ref RootBucket
+      Tags:
+        -
+          Key: "Name"
+          Value: "Toy Checklist WWW"
+        -
+          Key: "Purpose"
+          Value: "WWW redirect bucket for Toy Checklist application"
+        -
+          Key: "BillingCode"
+          Value: !Ref BillingCode
+        -
+          Key: "Stackname"
+          Value: !Ref ParentStackName
+Outputs:
+  RootWebsiteURL:
+    Value: !GetAtt RootBucket.WebsiteURL
+    Description: Root URL for toy checklist application hosted on S3
+  WWWWebsiteURL:
+    Value: !GetAtt WWWBucket.WebsiteURL
+    Description: WWW URL for toy checklist application hosted on S3
+  RootDomainName:
+    Value: !GetAtt RootBucket.DomainName
+    Description: Root Domain Name for toy checklist application hosted on S3
+  WWWDomainName:
+    Value: !GetAtt WWWBucket.RegionalDomainName
+    Description: WWW Domain Name for toy checklist application hosted on S3
+  RootArn:
+    Value: !GetAtt RootBucket.Arn
+    Description: Root ARN for toy checklist application hosted on S3
+  WWWArn:
+    Value: !GetAtt WWWBucket.Arn
+    Description: WWW ARN for toy checklist application hosted on S3

@@ -1,0 +1,47 @@
+{
+    "DomainName": "dcorp.info",
+    "DurationInYears": 1,
+    "AutoRenew": true,
+    "AdminContact": {
+        "FirstName": "Damian",
+        "LastName": "McDonald",
+        "ContactType": "PERSON",
+        "OrganizationName": "Dcorp",
+        "AddressLine1": "19 Orient Road",
+        "City": "Adelaide",
+        "State": "SA",
+        "CountryCode": "AU",
+        "ZipCode": "5068",
+        "PhoneNumber": "+34.634866897",
+        "Email": "damian.mcdonald1979@gmail.com"
+    },
+    "RegistrantContact": {
+      "FirstName": "Damian",
+      "LastName": "McDonald",
+      "ContactType": "PERSON",
+      "OrganizationName": "Dcorp",
+      "AddressLine1": "19 Orient Road",
+      "City": "Adelaide",
+      "State": "SA",
+      "CountryCode": "AU",
+      "ZipCode": "5068",
+      "PhoneNumber": "+34.634866897",
+      "Email": "damian.mcdonald1979@gmail.com"
+    },
+    "TechContact": {
+      "FirstName": "Damian",
+      "LastName": "McDonald",
+      "ContactType": "PERSON",
+      "OrganizationName": "Dcorp",
+      "AddressLine1": "19 Orient Road",
+      "City": "Adelaide",
+      "State": "SA",
+      "CountryCode": "AU",
+      "ZipCode": "5068",
+      "PhoneNumber": "+34.634866897",
+      "Email": "damian.mcdonald1979@gmail.com"
+    },
+    "PrivacyProtectAdminContact": true,
+    "PrivacyProtectRegistrantContact": true,
+    "PrivacyProtectTechContact": true
+}

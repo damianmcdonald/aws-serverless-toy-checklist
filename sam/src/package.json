@@ -1,0 +1,14 @@
+{
+  "name": "toychecklist",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Damian McDonald <damian.mcdonald1979@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint **/*.js"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.267.1",
+    "eslint": "^6.8.0"
+  }
+}
