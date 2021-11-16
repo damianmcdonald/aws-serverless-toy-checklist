@@ -8,7 +8,7 @@
     "lint": "./node_modules/.bin/eslint **/*.js"
   },
   "devDependencies": {
-    "aws-sdk": "^2.267.1",
+    "aws-sdk": "^2.814.0",
     "eslint": "^6.8.0"
   }
 }
